@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "brandName": "Apple",
+    "category": "智慧型手機",
+    "productName": "iPhone 15 Pro",
+    "price": 9999,
+    "description": "6.1 吋超視網膜 XDR 顯示器，A17 Pro 晶片，三鏡頭系統"
+  },
+  {
+    "id": 2,
+    "brandName": "Apple",
+    "category": "智慧型手機",
+    "productName": "iPhone 15",
+    "price": 7999,
+    "description": "6.1 吋 OLED，A16 晶片，支持動態島功能"
+  },
+  {
+    "id": 3,
+    "brandName": "Apple",
+    "category": "智慧型手機",
+    "productName": "iPhone 15 Plus",
+    "price": 8999,
+    "description": "6.7 吋螢幕，超長續航電池，雙鏡頭拍攝"
+  },
+  {
+    "id": 4,
+    "brandName": "Samsung",
+    "category": "智慧型手機",
+    "productName": "Samsung Galaxy S24 Ultra",
+    "price": 10899,
+    "description": "6.8 吋 AMOLED 顯示，200MP 主鏡頭，S Pen 支援"
+  },
+  {
+    "id": 5,
+    "brandName": "Samsung",
+    "category": "智慧型手機",
+    "productName": "Samsung Galaxy Z Fold",
+    "price": 12999,
+    "description": "可摺式設計，主螢幕 7.6 吋，旗艦效能處理器"
+  },
+  {
+    "id": 6,
+    "brandName": "Samsung",
+    "category": "智慧型手機",
+    "productName": "Samsung Galaxy A55",
+    "price": 3999,
+    "description": "6.6 吋螢幕，5000mAh 電池，實惠耐用"
+  },
+  {
+    "id": 7,
+    "brandName": "Google",
+    "category": "智慧型手機",
+    "productName": "Google Pixel 8 Pro",
+    "price": 9299,
+    "description": "Tensor G3 處理器，AI 攝影功能，120Hz 顯示"
+  },
+  {
+    "id": 8,
+    "brandName": "Google",
+    "category": "智慧型手機",
+    "productName": "Google Pixel 8a",
+    "price": 4999,
+    "description": "性能均衡，中階手機之選，極佳相機品質"
+  },
+  {
+    "id": 9,
+    "brandName": "Xiaomi",
+    "category": "智慧型手機",
+    "productName": "Xiaomi 14 Ultra",
+    "price": 8499,
+    "description": "Leica 攝影系統，Snapdragon 8 Gen 3 處理器"
+  },
+  {
+    "id": 10,
+    "brandName": "Xiaomi",
+    "category": "智慧型手機",
+    "productName": "Xiaomi 14",
+    "price": 6999,
+    "description": "旗艦級效能，輕量設計"
+  },
+  {
+    "id": 11,
+    "brandName": "OPPO",
+    "category": "智慧型手機",
+    "productName": "OPPO Find X7 Pro",
+    "price": 8999,
+    "description": "雙潛望鏡頭，頂級快充技術"
+  },
+  {
+    "id": 12,
+    "brandName": "OPPO",
+    "category": "智慧型手機",
+    "productName": "OPPO Reno12 Pro",
+    "price": 4999,
+    "description": "AI 自拍優化，曲面 OLED 顯示"
+  },
+  {
+    "id": 13,
+    "brandName": "vivo",
+    "category": "智慧型手機",
+    "productName": "vivo V30",
+    "price": 3799,
+    "description": "柔光燈設計，超纖薄，5000mAh 電池"
+  },
+  {
+    "id": 14,
+    "brandName": "vivo",
+    "category": "智慧型手機",
+    "productName": "vivo X100 Pro",
+    "price": 8999,
+    "description": "蔡司光學鏡頭，4K 夜拍功能"
+  },
+  {
+    "id": 15,
+    "brandName": "HONOR",
+    "category": "智慧型手機",
+    "productName": "HONOR Magic6 Pro",
+    "price": 8599,
+    "description": "AI 體驗與高刷新 OLED 顯示"
+  },
+  {
+    "id": 16,
+    "brandName": "HONOR",
+    "category": "智慧型手機",
+    "productName": "HONOR X9b",
+    "price": 2899,
+    "description": "堅固耐摔設計，曲面 AMOLED 顯示"
+  },
+  {
+    "id": 17,
+    "brandName": "Realme",
+    "category": "智慧型手機",
+    "productName": "realme GT 6",
+    "price": 4299,
+    "description": "性能強勁，150W 極速充電"
+  },
+  {
+    "id": 18,
+    "brandName": "SONY",
+    "category": "智慧型手機",
+    "productName": "Sony Xperia 1 VI",
+    "price": 10499,
+    "description": "4K HDR OLED 顯示，專業相機模式"
+  },
+  {
+    "id": 19,
+    "brandName": "ASUS",
+    "category": "智慧型手機",
+    "productName": "ASUS ROG Phone 8 Pro",
+    "price": 9999,
+    "description": "為遊戲玩家設計，165Hz 顯示"
+  },
+  {
+    "id": 20,
+    "brandName": "NOTHING",
+    "category": "智慧型手機",
+    "productName": "Nothing Phone (2a)",
+    "price": 3499,
+    "description": "透明設計，Glyph 燈效介面"
+  }
+]
