@@ -4,20 +4,29 @@ import { AuthService } from './auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
-  imports:[
+  providers: [
+    AuthService,
+    // 设置全局守卫（接口都要验证）
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    }
+  ],
+  imports: [
     UsersModule,
     JwtModule.register({
-      global:true,
-      secret:jwtConstants.secret,
-      signOptions:{
+      global: true,
+      secret: jwtConstants.secret,
+      signOptions: {
         expiresIn: '60s'
       },
     })
   ],
-  exports:[AuthService],
+  exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }
