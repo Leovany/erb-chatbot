@@ -26,12 +26,21 @@ import 'winston-daily-rotate-file';
       transports: [
         // 控制台输出（开发环境）
         new winston.transports.Console({
+          level: 'debug', // 显示 debug 及以上级别的日志
           format: winston.format.combine(
             winston.format.colorize(),
             winston.format.printf((info) => {
-              const { timestamp, level, message, context, stack, ...rest } = info;
+              const { timestamp, level, message, context, stack, data, ...rest } = info;
               const contextStr = context ? `[${context}] ` : '';
-              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              
+              // 如果只有 data 字段，直接拼接到 message 后面
+              if (data !== undefined && Object.keys(rest).length === 0) {
+                return `${timestamp} ${contextStr}${level}: ${message} ${data}${stack ? '\n' + stack : ''}`;
+              }
+              
+              // 如果有其他字段，显示为 JSON
+              const allRest = data !== undefined ? { data, ...rest } : rest;
+              const metaStr = Object.keys(allRest).length ? ` ${JSON.stringify(allRest)}` : '';
               return `${timestamp} ${contextStr}${level}: ${message}${metaStr}${stack ? '\n' + stack : ''}`;
             }),
           ),
@@ -51,9 +60,17 @@ import 'winston-daily-rotate-file';
               format: 'YYYY-MM-DD HH:mm:ss', 
             }),
             winston.format.printf((info) => {
-              const { level, message, timestamp, context, ...rest } = info;
+              const { level, message, timestamp, context, data, ...rest } = info;
               const contextStr = context ? `[${context}] ` : '';
-              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              
+              // 如果只有 data 字段，直接拼接到 message 后面
+              if (data !== undefined && Object.keys(rest).length === 0) {
+                return `${timestamp} ${contextStr}${level}: ${message} ${data}`;
+              }
+              
+              // 如果有其他字段，显示为 JSON
+              const allRest = data !== undefined ? { data, ...rest } : rest;
+              const metaStr = Object.keys(allRest).length ? ` ${JSON.stringify(allRest)}` : '';
               return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
             })
           ),
@@ -69,7 +86,7 @@ import 'winston-daily-rotate-file';
           maxSize: '20m',
           maxFiles: '14d',      // 保留 14 天
 
-          format: winston.format.combine(
+            format: winston.format.combine(
             winston.format.timestamp({
                 format: 'YYYY-MM-DD HH:mm:ss', 
             }),
@@ -80,9 +97,17 @@ import 'winston-daily-rotate-file';
                 return info;
             })(),
             winston.format.printf((info) => {
-                const { level, message, timestamp, context, ...rest } = info;
+                const { level, message, timestamp, context, data, ...rest } = info;
                 const contextStr = context ? `[${context}] ` : '';
-                const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+                
+                // 如果只有 data 字段，直接拼接到 message 后面
+                if (data !== undefined && Object.keys(rest).length === 0) {
+                  return `${timestamp} ${contextStr}${level}: ${message} ${data}`;
+                }
+                
+                // 如果有其他字段，显示为 JSON
+                const allRest = data !== undefined ? { data, ...rest } : rest;
+                const metaStr = Object.keys(allRest).length ? ` ${JSON.stringify(allRest)}` : '';
                 return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
             })
         )
@@ -102,9 +127,17 @@ import 'winston-daily-rotate-file';
               format: 'YYYY-MM-DD HH:mm:ss', 
             }),
             winston.format.printf((info) => {
-              const { level, message, timestamp, context, ...rest } = info;
+              const { level, message, timestamp, context, data, ...rest } = info;
               const contextStr = context ? `[${context}] ` : '';
-              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              
+              // 如果只有 data 字段，直接拼接到 message 后面
+              if (data !== undefined && Object.keys(rest).length === 0) {
+                return `${timestamp} ${contextStr}${level}: ${message} ${data}`;
+              }
+              
+              // 如果有其他字段，显示为 JSON
+              const allRest = data !== undefined ? { data, ...rest } : rest;
+              const metaStr = Object.keys(allRest).length ? ` ${JSON.stringify(allRest)}` : '';
               return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
             })
           ),
@@ -125,10 +158,18 @@ import 'winston-daily-rotate-file';
             }),
             winston.format.errors({ stack: true }),
             winston.format.printf((info) => {
-              const { level, message, timestamp, context, stack, ...rest } = info;
+              const { level, message, timestamp, context, stack, data, ...rest } = info;
               const contextStr = context ? `[${context}] ` : '';
-              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
               const stackStr = stack ? `\n${stack}` : '';
+              
+              // 如果只有 data 字段，直接拼接到 message 后面
+              if (data !== undefined && Object.keys(rest).length === 0) {
+                return `${timestamp} ${contextStr}${level}: ${message} ${data}${stackStr}`;
+              }
+              
+              // 如果有其他字段，显示为 JSON
+              const allRest = data !== undefined ? { data, ...rest } : rest;
+              const metaStr = Object.keys(allRest).length ? ` ${JSON.stringify(allRest)}` : '';
               return `${timestamp} ${contextStr}${level}: ${message}${metaStr}${stackStr}`;
             })
           ),
@@ -147,9 +188,17 @@ import 'winston-daily-rotate-file';
               format: 'YYYY-MM-DD HH:mm:ss', 
             }),
             winston.format.printf((info) => {
-              const { level, message, timestamp, context, ...rest } = info;
+              const { level, message, timestamp, context, data, ...rest } = info;
               const contextStr = context ? `[${context}] ` : '';
-              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              
+              // 如果只有 data 字段，直接拼接到 message 后面
+              if (data !== undefined && Object.keys(rest).length === 0) {
+                return `${timestamp} ${contextStr}${level}: ${message} ${data}`;
+              }
+              
+              // 如果有其他字段，显示为 JSON
+              const allRest = data !== undefined ? { data, ...rest } : rest;
+              const metaStr = Object.keys(allRest).length ? ` ${JSON.stringify(allRest)}` : '';
               return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
             })
           ),
