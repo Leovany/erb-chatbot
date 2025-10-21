@@ -1,8 +1,12 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards, Inject } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 // import {SkipAuth} from './auth/decorators/public.decorator'
 import { SkipAuth } from './decorators/skipauth.decorator';
+
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+
 
 /**
  * 权限校验模块
@@ -14,6 +18,7 @@ import { SkipAuth } from './decorators/skipauth.decorator';
 @Controller('auth')
 export class AuthController {
     constructor(
+        @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
         private authService: AuthService
     ) { }
 
@@ -21,6 +26,11 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('login')
     signIn(@Body() signInDto: Record<string, any>) {
+        console.log('signInDto', signInDto.username);
+        this.logger.debug('debug signIn', signInDto.username);
+        this.logger.info('info signIn', { username: signInDto.username });
+        this.logger.warn('warn signIn', { username: signInDto.username });
+        this.logger.error('error signIn', { username: signInDto.username });
         return this.authService.signIn(signInDto.username, signInDto.password);
     }
 
