@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { LoggerModule } from './common/logger/logger.module';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
@@ -11,6 +13,7 @@ import 'winston-daily-rotate-file';
   imports: [
     AuthModule,
     UsersModule,
+    LoggerModule,
     WinstonModule.forRoot({
       // 日志格式配置
       format: winston.format.combine(
@@ -25,9 +28,11 @@ import 'winston-daily-rotate-file';
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.colorize(),
-            winston.format.printf(({ timestamp, level, message, context, stack }) => {
-              const contextStr = context ? `[${context}]` : '';
-              return `${timestamp} ${contextStr} ${level}: ${message}${stack ? '\n' + stack : ''}`;
+            winston.format.printf((info) => {
+              const { timestamp, level, message, context, stack, ...rest } = info;
+              const contextStr = context ? `[${context}] ` : '';
+              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              return `${timestamp} ${contextStr}${level}: ${message}${metaStr}${stack ? '\n' + stack : ''}`;
             }),
           ),
         }),
@@ -42,8 +47,15 @@ import 'winston-daily-rotate-file';
           maxSize: '20m',       // 单个文件最大 20MB
           maxFiles: '7d',       // 保留 7 天
           format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json(),
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss', 
+            }),
+            winston.format.printf((info) => {
+              const { level, message, timestamp, context, ...rest } = info;
+              const contextStr = context ? `[${context}] ` : '';
+              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
+            })
           ),
         }),
 
@@ -56,10 +68,24 @@ import 'winston-daily-rotate-file';
           zippedArchive: true,
           maxSize: '20m',
           maxFiles: '14d',      // 保留 14 天
+
           format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json(),
-          ),
+            winston.format.timestamp({
+                format: 'YYYY-MM-DD HH:mm:ss', 
+            }),
+            winston.format((info) => {
+                if (info.level === "error") {
+                    return false; // 过滤掉'error'级别的日志
+                }
+                return info;
+            })(),
+            winston.format.printf((info) => {
+                const { level, message, timestamp, context, ...rest } = info;
+                const contextStr = context ? `[${context}] ` : '';
+                const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+                return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
+            })
+        )
         }),
 
         // Warn 级别日志 - 按日期轮转
@@ -72,8 +98,15 @@ import 'winston-daily-rotate-file';
           maxSize: '20m',
           maxFiles: '30d',      // 保留 30 天
           format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json(),
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss', 
+            }),
+            winston.format.printf((info) => {
+              const { level, message, timestamp, context, ...rest } = info;
+              const contextStr = context ? `[${context}] ` : '';
+              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
+            })
           ),
         }),
 
@@ -87,9 +120,17 @@ import 'winston-daily-rotate-file';
           maxSize: '20m',
           maxFiles: '30d',      // 保留 30 天
           format: winston.format.combine(
-            winston.format.timestamp(),
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss', 
+            }),
             winston.format.errors({ stack: true }),
-            winston.format.json(),
+            winston.format.printf((info) => {
+              const { level, message, timestamp, context, stack, ...rest } = info;
+              const contextStr = context ? `[${context}] ` : '';
+              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              const stackStr = stack ? `\n${stack}` : '';
+              return `${timestamp} ${contextStr}${level}: ${message}${metaStr}${stackStr}`;
+            })
           ),
         }),
 
@@ -102,8 +143,15 @@ import 'winston-daily-rotate-file';
           maxSize: '20m',
           maxFiles: '14d',
           format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json(),
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss', 
+            }),
+            winston.format.printf((info) => {
+              const { level, message, timestamp, context, ...rest } = info;
+              const contextStr = context ? `[${context}] ` : '';
+              const metaStr = Object.keys(rest).length ? ` ${JSON.stringify(rest)}` : '';
+              return `${timestamp} ${contextStr}${level}: ${message}${metaStr}`;
+            })
           ),
         }),
       ],
