@@ -6,6 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LoggerModule } from './common/logger/logger.module';
 import { WinstonModule } from 'nest-winston';
+import { QuestionModule } from './question/question.module';
+import { ProductModule } from './product/product.module';
+import { ShopModule } from './shop/shop.module';
+//import { MongooseModule } from '@nestjs/mongoose';
+import { SeedService } from './scripts/seed-data';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 
@@ -14,6 +19,14 @@ import 'winston-daily-rotate-file';
     AuthModule,
     UsersModule,
     LoggerModule,
+    QuestionModule,
+    ProductModule,
+    ShopModule,
+    ConfigModule.forRoot(),
+    // MongooseModule.forRoot('mongodb://localhost:27017/chatbot-db', {
+    //   retryAttempts: 3,
+    //   retryDelay: 1000,
+    // }),
     WinstonModule.forRoot({
       // 日志格式配置
       format: winston.format.combine(
@@ -206,7 +219,7 @@ import 'winston-daily-rotate-file';
       ],
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController,],
   providers: [AppService],
 })
 export class AppModule { }

@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  app.setGlobalPrefix('api'); // 所有路由添加 /api 前缀
+  await app.listen(3000);
+  console.log('应用运行在: http://localhost:3000');
 }
 bootstrap();
