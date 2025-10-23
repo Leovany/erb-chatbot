@@ -1,33 +1,32 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { UsersService } from "src/users/users.service";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private userService: UsersService,
-        private jwtService: JwtService,
-    ) { }
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-
-    async signIn(username: string, pass: string): Promise<any> {
-        const user = await this.userService.findOne(username);
-        if (user == null) {
-            throw new UnauthorizedException("user is not exist");
-        }
-        if (user?.password !== pass) {
-            throw new UnauthorizedException("password is incorrect");
-        }
-
-        const payload = {
-            sub: user.userId,
-            username: user.username
-        };
-
-        const result = {
-            access_token: await this.jwtService.signAsync(payload),
-        }
-
-        return result;
+  async signIn(username: string, pass: string): Promise<any> {
+    const user = await this.userService.findOne(username);
+    if (user == null) {
+      throw new UnauthorizedException("user is not exist");
     }
+    if (user?.password !== pass) {
+      throw new UnauthorizedException("password is incorrect");
+    }
+
+    const payload = {
+      sub: user.userId,
+      username: user.username,
+    };
+
+    const result = {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+
+    return result;
+  }
 }

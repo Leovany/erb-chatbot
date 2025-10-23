@@ -1,81 +1,45 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import * as fs from 'fs';
-import * as path from 'path';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Shop } from './shop.schema';
 
 @Injectable()
 export class ShopService {
-  private readonly dataPath = path.join(__dirname, '../../db/shop.json');
+  constructor(@InjectModel(Shop.name) private shopModel: Model<Shop>) {}
 
-  private readData(): any[] {
-    try {
-      const data = fs.readFileSync(this.dataPath, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      console.error('读取分店数据失败:', error);
-      return [];
-    }
+  async findAll(): Promise<Shop[]> {
+    return this.shopModel.find().exec();
   }
 
-  async findAll(): Promise<any[]> {
-    return this.readData();
-  }
-
-  async findOne(id: string): Promise<any> {
-    const shops = this.readData();
-    const shop = shops.find(s => s.id === parseInt(id));
+  async findOne(id: string): Promise<Shop> {
+    const shop = await this.shopModel.findById(id).exec();
     if (!shop) {
       throw new NotFoundException(`分店 ID ${id} 未找到`);
     }
     return shop;
   }
 
-  async findNearbyShops(lat: number, lng: number): Promise<any[]> {
-    const shops = this.readData();
+  async findById(id: number): Promise<Shop> {
+    const shop = await this.shopModel.findOne({ id }).exec();
+    if (!shop) {
+      throw new NotFoundException(`分店 ID ${id} 未找到`);
+    }
+    return shop;
+  }
+
+  async findNearbyShops(lat: number, lng: number): Promise<Shop[]> {
     const latRange = 0.018;
     const lngRange = 0.018;
     
-    return shops.filter(shop => 
-      shop.lat >= lat - latRange && 
-      shop.lat <= lat + latRange &&
-      shop.lng >= lng - lngRange && 
-      shop.lng <= lng + lngRange
-    );
+    return this.shopModel.find({
+      lat: { 
+        $gte: lat - latRange, 
+        $lte: lat + latRange 
+      },
+      lng: { 
+        $gte: lng - lngRange, 
+        $lte: lng + lngRange 
+      }
+    }).exec();
   }
-
-  // 暂时注释掉创建、更新、删除方法
-  /*
-  async create(shopData: any): Promise<any> {
-    const shops = this.readData();
-    const newShop = { id: Date.now(), ...shopData };
-    shops.push(newShop);
-    this.writeData(shops);
-    return newShop;
-  }
-
-  async update(id: string, updateData: any): Promise<any> {
-    const shops = this.readData();
-    const index = shops.findIndex(s => s.id === parseInt(id));
-    if (index === -1) {
-      throw new NotFoundException(`分店 ID ${id} 未找到`);
-    }
-    shops[index] = { ...shops[index], ...updateData };
-    this.writeData(shops);
-    return shops[index];
-  }
-
-  async remove(id: string): Promise<{ message: string }> {
-    const shops = this.readData();
-    const index = shops.findIndex(s => s.id === parseInt(id));
-    if (index === -1) {
-      throw new NotFoundException(`分店 ID ${id} 未找到`);
-    }
-    shops.splice(index, 1);
-    this.writeData(shops);
-    return { message: '分店删除成功' };
-  }
-
-  private writeData(data: any[]): void {
-    fs.writeFileSync(this.dataPath, JSON.stringify(data, null, 2));
-  }
-  */
 }

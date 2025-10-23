@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ collection: 'shop' })  // 明确指定集合名称
 export class Shop {
   @Prop({ required: true })
   id: number;

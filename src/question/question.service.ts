@@ -1,78 +1,69 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import * as fs from 'fs';
-import * as path from 'path';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Question } from './question.schema';
 
 @Injectable()
 export class QuestionService {
-  private readonly dataPath = path.join(__dirname, '../../db/qa.json');
+  constructor(@InjectModel(Question.name) private questionModel: Model<Question>) {}
 
-  private readData(): any[] {
-    try {
-      const data = fs.readFileSync(this.dataPath, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      console.error('读取问答数据失败:', error);
-      return [];
-    }
+  async findAll(): Promise<Question[]> {
+    return this.questionModel.find().exec();
   }
 
-  async findAll(): Promise<any[]> {
-    return this.readData();
-  }
-
-  async findOne(id: string): Promise<any> {
-    const questions = this.readData();
-    const question = questions.find(q => q.id === parseInt(id));
+  async findOne(id: string): Promise<Question> {
+    const question = await this.questionModel.findById(id).exec();
     if (!question) {
       throw new NotFoundException(`问答 ID ${id} 未找到`);
     }
     return question;
   }
 
-  async searchByKeyword(keyword: string): Promise<any[]> {
-    const questions = this.readData();
-    const lowerKeyword = keyword.toLowerCase();
-    return questions.filter(q => 
-      q.question.toLowerCase().includes(lowerKeyword) || 
-      q.answer.toLowerCase().includes(lowerKeyword) ||
-      q.category.toLowerCase().includes(lowerKeyword)
-    );
-  }
-
-  // 暂时注释掉创建、更新、删除方法
-  /*
-  async create(questionData: any): Promise<any> {
-    const questions = this.readData();
-    const newQuestion = { id: Date.now(), ...questionData };
-    questions.push(newQuestion);
-    this.writeData(questions);
-    return newQuestion;
-  }
-
-  async update(id: string, updateData: any): Promise<any> {
-    const questions = this.readData();
-    const index = questions.findIndex(q => q.id === parseInt(id));
-    if (index === -1) {
+  async findById(id: number): Promise<Question> {
+    const question = await this.questionModel.findOne({ id }).exec();
+    if (!question) {
       throw new NotFoundException(`问答 ID ${id} 未找到`);
     }
-    questions[index] = { ...questions[index], ...updateData };
-    this.writeData(questions);
-    return questions[index];
+    return question;
+  }
+
+  async searchByKeyword(keyword: string): Promise<Question[]> {
+    const regex = new RegExp(keyword, 'i');
+    return this.questionModel.find({
+      $or: [
+        { question: { $regex: regex } },
+        { answer: { $regex: regex } },
+        { category: { $regex: regex } }
+      ]
+    }).exec();
+  }
+
+  // 如果需要 CRUD 操作，可以取消注释以下方法
+  /*
+  async create(questionData: any): Promise<Question> {
+    const newQuestion = new this.questionModel(questionData);
+    return newQuestion.save();
+  }
+
+  async update(id: string, updateData: any): Promise<Question> {
+    const question = await this.questionModel.findByIdAndUpdate(
+      id, 
+      updateData, 
+      { new: true }
+    ).exec();
+    
+    if (!question) {
+      throw new NotFoundException(`问答 ID ${id} 未找到`);
+    }
+    return question;
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    const questions = this.readData();
-    const index = questions.findIndex(q => q.id === parseInt(id));
-    if (index === -1) {
+    const result = await this.questionModel.findByIdAndDelete(id).exec();
+    if (!result) {
       throw new NotFoundException(`问答 ID ${id} 未找到`);
     }
-    questions.splice(index, 1);
-    this.writeData(questions);
     return { message: '问答删除成功' };
-  }
-
-  private writeData(data: any[]): void {
-    fs.writeFileSync(this.dataPath, JSON.stringify(data, null, 2));
   }
   */
 }

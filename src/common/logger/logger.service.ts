@@ -1,6 +1,6 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { Inject, Injectable, Scope } from "@nestjs/common";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { Logger } from "winston";
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class LoggerService {
@@ -18,12 +18,12 @@ export class LoggerService {
     if (meta === undefined || meta === null) {
       return { context: this.context };
     }
-    
+
     // 如果是对象（不包括数组），展开它
-    if (typeof meta === 'object' && !Array.isArray(meta)) {
+    if (typeof meta === "object" && !Array.isArray(meta)) {
       return { ...meta, context: this.context };
     }
-    
+
     // 如果是字符串、数字、布尔值、数组等，作为 data 字段
     return { data: meta, context: this.context };
   }
@@ -48,4 +48,3 @@ export class LoggerService {
     this.logger.info(message, this.formatMeta(meta));
   }
 }
-
