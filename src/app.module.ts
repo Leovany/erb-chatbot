@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module,NestModule ,MiddlewareConsumer} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +13,7 @@ import { ShopModule } from './shop/shop.module';
 import { SeedService } from './scripts/seed-data';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
+import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 
 @Module({
   imports: [
@@ -222,4 +223,8 @@ import 'winston-daily-rotate-file';
   controllers: [AppController,],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule implements NestModule{ 
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
