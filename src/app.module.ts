@@ -1,18 +1,19 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule,ConfigService } from "@nestjs/config";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { AuthModule } from "./auth/auth.module";
-import { UsersModule } from "./users/users.module";
-import { LoggerModule } from "./common/logger/logger.module";
-import { WinstonModule } from "nest-winston";
-import { QuestionModule } from "./question/question.module";
-import { ProductModule } from "./product/product.module";
-import { ShopModule } from "./shop/shop.module";
+import { Module,NestModule ,MiddlewareConsumer} from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { LoggerModule } from './common/logger/logger.module';
+import { WinstonModule } from 'nest-winston';
+import { QuestionModule } from './question/question.module';
+import { ProductModule } from './product/product.module';
+import { ShopModule } from './shop/shop.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { SeedService } from "./scripts/seed-data";
-import * as winston from "winston";
-import "winston-daily-rotate-file";
+import { SeedService } from './scripts/seed-data';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file';
+import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 
 @Module({
   imports: [
