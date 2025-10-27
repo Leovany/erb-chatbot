@@ -35,12 +35,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post("login")
   signIn(@Body() signInDto: Record<string, any>) {
-    // console.log('signInDto', signInDto.username);
-    // 不需要手动传 context，会自动使用构造函数中设置的类名
-    this.logger.debug("debug signIn", { username: signInDto.username });
-    this.logger.info("info signIn", { username: signInDto.username });
-    this.logger.warn("warn signIn", { username: signInDto.username });
-    this.logger.error("error signIn", { username: signInDto.username });
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 

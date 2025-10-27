@@ -13,6 +13,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
+  app.setGlobalPrefix("api");   // 所有路由添加 /api 前缀
   await app.listen(process.env.PORT ?? 3000);  
 
   console.log("应用运行在: http://localhost:3000");
