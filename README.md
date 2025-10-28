@@ -18,3 +18,14 @@
 
 * 后台框架： NestJS
 * 日志框架：nest-winston
+
+
+# 数据库
+* 安装MongoDB 6.0.26版本，安装完成后继续安装Mongo compass图形化软件，在compass里创建数据库
+
+# 指定坐标查找店铺
+* 测试鼓油街分店附近的店铺（使用鼓油街分店的坐标）
+http://localhost:3000/api/shop/nearby/22.31666921/114.1707795
+
+* 测试创纪之城分店附近的店铺（使用创纪之城分店的坐标）  
+http://localhost:3000/api/shop/nearby/22.31244577/114.2251802
