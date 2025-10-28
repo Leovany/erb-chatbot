@@ -1,5 +1,5 @@
 import { Module,NestModule ,MiddlewareConsumer} from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -24,9 +24,30 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
     ProductModule,
     ShopModule,
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost:27017/chatbot', {
-      retryAttempts: 3,
-      retryDelay: 1000,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        // 优先使用完整的MONGO_URI
+        const uri = configService.get<string>('MONGO_URI') || (() => {
+          // MongoDB 数据库信息
+          const host = configService.get<string>('MONGO_HOST') || 'localhost';
+          const port = configService.get<string>('MONGO_PORT') || '27017';
+          const db = configService.get<string>('MONGO_DB') || 'chatbot';
+
+          const user = configService.get<string>('MONGO_USER') || "admin";
+          const pass = configService.get<string>('MONGO_PASS') || "123456";
+          const auth = user && pass ? `${encodeURIComponent(user)}:${encodeURIComponent(pass)}@` : '';
+          //  `mongodb://admin:123456@localhost:27017/chatbot`;
+          return `mongodb://${auth}${host}:${port}/${db}`;
+        })();
+        
+        return {
+          uri,
+          retryAttempts: 3,
+          retryDelay: 1000,
+        };
+      },
+      inject: [ConfigService],
     }),
     WinstonModule.forRoot({
       // 日志格式配置
