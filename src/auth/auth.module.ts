@@ -23,7 +23,7 @@ import { AuthGuard } from "./auth.guard";
       global: true,
       secret: jwtConstants.secret,
       signOptions: {
-        expiresIn: "60s",
+        expiresIn: "1h",
       },
     }),
   ],

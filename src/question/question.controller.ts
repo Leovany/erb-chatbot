@@ -1,6 +1,18 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Put, 
+  Delete, 
+  Param, 
+  Body, 
+  HttpCode,
+  HttpStatus 
+} from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { SkipAuth } from '../auth/decorators/skipauth.decorator';
+import { CreateQuestionDto } from '../dto/create-question.dto';
+import { UpdateQuestionDto } from '../dto/update-question.dto';
 
 @Controller('question')
 export class QuestionController {
@@ -10,6 +22,13 @@ export class QuestionController {
   @Get()
   async getAllQuestions() {
     return await this.questionService.findAll();
+  }
+
+  @SkipAuth()
+  @Get('next-id')
+  async getNextId() {
+    const nextId = await this.questionService.getNextId();
+    return { nextId };
   }
 
   @SkipAuth()
@@ -26,5 +45,26 @@ export class QuestionController {
   @Get('search/:keyword')
   async searchQuestions(@Param('keyword') keyword: string) {
     return await this.questionService.searchByKeyword(keyword);
+  }
+
+  // 以下操作需要认证 - 与 product.controller.ts 保持一致
+  @Post()
+  async createQuestion(@Body() createQuestionDto: CreateQuestionDto) {
+    return await this.questionService.create(createQuestionDto);
+  }
+
+  @Put(':id')
+  async updateQuestion(
+    @Param('id') id: string,
+    @Body() updateQuestionDto: UpdateQuestionDto
+  ) {
+    return await this.questionService.update(id, updateQuestionDto);
+  }
+
+  // 修复：与 product.controller.ts 保持一致，返回 HttpStatus.OK
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async deleteQuestion(@Param('id') id: string): Promise<{ message: string }> {
+    return await this.questionService.remove(id);
   }
 }
