@@ -10,5 +10,6 @@ import { Product, ProductSchema } from './product.schema';
   ],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService], // 导出服务以便其他模块使用
 })
 export class ProductModule {}
