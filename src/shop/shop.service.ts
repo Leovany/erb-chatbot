@@ -80,10 +80,10 @@ async create(createShopDto: CreateShopDto): Promise<Shop> {
     try {
       const createdShop = new this.shopModel({
         ...createShopDto,
-        location: {
-          type: "Point",
-          coordinates: [createShopDto.lng, createShopDto.lat]
-        }
+        // location: {
+        //   type: "Point",
+        //   coordinates: [createShopDto.lng, createShopDto.lat]
+        // }
       });
       return await createdShop.save();
     } catch (error) {
@@ -119,19 +119,19 @@ async update(id: number, updateShopDto: UpdateShopDto): Promise<Shop> {
 
     try {
       // 如果有经纬度更新，同时更新location字段
-      const updateData: any = { ...updateShopDto };
-      if (updateShopDto.lat !== undefined || updateShopDto.lng !== undefined) {
-        const newLat = updateShopDto.lat !== undefined ? updateShopDto.lat : existingShop.lat;
-        const newLng = updateShopDto.lng !== undefined ? updateShopDto.lng : existingShop.lng;
-        updateData.location = {
-          type: "Point",
-          coordinates: [newLng, newLat]
-        };
-      }
+      // const updateData: any = { ...updateShopDto };
+      // if (updateShopDto.lat !== undefined || updateShopDto.lng !== undefined) {
+      //   const newLat = updateShopDto.lat !== undefined ? updateShopDto.lat : existingShop.lat;
+      //   const newLng = updateShopDto.lng !== undefined ? updateShopDto.lng : existingShop.lng;
+      //   updateData.location = {
+      //     type: "Point",
+      //     coordinates: [newLng, newLat]
+      //   };
+      // }
 
       const updatedShop = await this.shopModel.findOneAndUpdate(
         { id },
-        { $set: updateData },
+        // { $set: updateData },
         { new: true, runValidators: true }
       ).exec();
 

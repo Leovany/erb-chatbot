@@ -37,26 +37,28 @@ export class Shop {
   lng: number;
 
   // 地理空间字段
-  @Prop({
-    type: {
-      type: String,
-      enum: ['Point'],
-      default: 'Point'
-    },
-    coordinates: {
-      type: [Number],
-      default: [0, 0]
-    }
-  })
-  location: {
-    type: string;
-    coordinates: number[];
-  };
+  // @Prop({
+  //   type: {
+  //     type: String,
+  //     enum: ['Point'],
+  //     default: 'Point'
+  //   },
+  //   coordinates: {
+  //     type: [Number],
+  //     default: [0, 0]
+  //   }
+  // })
+  
+  // location: {
+  //   type: string;
+  //   coordinates: number[];
+  // };
+
 }
 
 export const ShopSchema = SchemaFactory.createForClass(Shop);
 
 // 创建地理空间索引
-ShopSchema.index({ location: '2dsphere' });
+// ShopSchema.index({ location: '2dsphere' });
 ShopSchema.index({ id: 1 }, { unique: true });
 ShopSchema.index({ shopName: 1 });
