@@ -29,8 +29,14 @@ export class ProductController {
   @Get()
   @ApiOperation({ summary: '获取所有产品' })
   @ApiResponse({ status: 200, description: '成功获取产品列表', type: [Product] })
-  async getAllProducts(): Promise<Product[]> {
-    return await this.productService.findAll();
+  async getAllProducts() {
+    const products = await this.productService.findAll();
+    return {
+      success: true,
+      data: products,
+      count: products.length,
+      message: '获取产品列表成功'
+    };
   }
 
   @SkipAuth()
@@ -40,17 +46,25 @@ export class ProductController {
   @ApiResponse({ status: 200, description: '成功获取产品', type: Product })
   @ApiResponse({ status: 404, description: '产品未找到' })
   @ApiResponse({ status: 400, description: '无效的ID格式' })
-  async getProduct(@Param('id') id: string): Promise<Product> {
+  async getProduct(@Param('id') id: string) {
+    let product;
     if (/^[0-9a-fA-F]{24}$/.test(id)) {
-      return await this.productService.findOne(id);
+      product = await this.productService.findOne(id);
     } else {
       // 尝试解析为数字ID
       const numericId = parseInt(id);
       if (isNaN(numericId)) {
         throw new Error('无效的产品ID格式');
       }
-      return await this.productService.findById(numericId);
+      product = await this.productService.findById(numericId);
     }
+    
+    return {
+      success: true,
+      data: [product], // 改为数组格式
+      count: 1,
+      message: '获取产品信息成功'
+    };
   }
 
   // 移除了 @SkipAuth() - 需要认证
@@ -59,8 +73,16 @@ export class ProductController {
   @ApiResponse({ status: 201, description: '产品创建成功', type: Product })
   @ApiResponse({ status: 409, description: '产品ID或名称已存在' })
   @ApiResponse({ status: 400, description: '请求参数错误' })
-  async createProduct(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return await this.productService.create(createProductDto);
+  @HttpCode(HttpStatus.CREATED)
+  async createProduct(@Body() createProductDto: CreateProductDto) {
+    const product = await this.productService.create(createProductDto);
+    
+    return {
+      success: true,
+      data: [product], // 改为数组格式
+      count: 1,
+      message: '产品创建成功'
+    };
   }
 
   // 移除了 @SkipAuth() - 需要认证
@@ -74,8 +96,15 @@ export class ProductController {
   async updateProduct(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
-    return await this.productService.update(id, updateProductDto);
+  ) {
+    const product = await this.productService.update(id, updateProductDto);
+    
+    return {
+      success: true,
+      data: [product], // 改为数组格式
+      count: 1,
+      message: '产品更新成功'
+    };
   }
 
   // 移除了 @SkipAuth() - 需要认证
@@ -86,8 +115,13 @@ export class ProductController {
   @ApiResponse({ status: 404, description: '产品未找到' })
   @ApiResponse({ status: 400, description: '无效的ID格式' })
   @HttpCode(HttpStatus.OK)
-  async deleteProduct(@Param('id') id: string): Promise<{ message: string }> {
-    return await this.productService.remove(id);
+  async deleteProduct(@Param('id') id: string) {
+    const result = await this.productService.remove(id);
+    
+    return {
+      success: true,
+      message: result.message
+    };
   }
 
   @SkipAuth()
@@ -96,8 +130,15 @@ export class ProductController {
   @ApiParam({ name: 'keyword', description: '搜索关键词' })
   @ApiResponse({ status: 200, description: '搜索成功', type: [Product] })
   @ApiResponse({ status: 400, description: '关键词不能为空' })
-  async searchProducts(@Param('keyword') keyword: string): Promise<Product[]> {
-    return await this.productService.searchByKeyword(keyword);
+  async searchProducts(@Param('keyword') keyword: string) {
+    const products = await this.productService.searchByKeyword(keyword);
+    
+    return {
+      success: true,
+      data: products,
+      count: products.length,
+      message: '搜索产品成功'
+    };
   }
 
   @SkipAuth()
@@ -112,11 +153,18 @@ export class ProductController {
     @Param('keyword') keyword: string,
     @Param('minPrice', ParseIntPipe) minPrice: number,
     @Param('maxPrice', ParseIntPipe) maxPrice: number,
-  ): Promise<Product[]> {
-    return await this.productService.searchByKeywordAndPrice(
+  ) {
+    const products = await this.productService.searchByKeywordAndPrice(
       keyword,
       minPrice,
       maxPrice,
     );
+    
+    return {
+      success: true,
+      data: products,
+      count: products.length,
+      message: '搜索产品成功'
+    };
   }
 }

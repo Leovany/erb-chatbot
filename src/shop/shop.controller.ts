@@ -48,7 +48,7 @@ export class ShopController {
     
     return {
       success: true,
-      data: shop,
+      data: [shop],
       message: '获取分店信息成功'
     };
   }
@@ -78,7 +78,7 @@ export class ShopController {
     
     return {
       success: true,
-      data: shop,
+      data: [shop],
       message: '分店创建成功'
     };
   }
@@ -93,7 +93,7 @@ export class ShopController {
     
     return {
       success: true,
-      data: shop,
+      data: [shop],
       message: '分店更新成功'
     };
   }
