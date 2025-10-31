@@ -13,7 +13,8 @@ import { AuthGuard } from "./auth.guard";
 // import {SkipAuth} from './auth/decorators/public.decorator'
 import { SkipAuth } from "./decorators/skipauth.decorator";
 import { LoggerService } from "../common/logger/logger.service";
-
+import { SignInDTO } from "./dto/signin.dto"; 
+import { ApiTags, ApiOperation, ApiResponse, ApiParam,ApiBody } from '@nestjs/swagger';
 /**
  * 权限校验模块
  *
@@ -34,14 +35,9 @@ export class AuthController {
   @SkipAuth() // 设置不用验证，
   @HttpCode(HttpStatus.OK)
   @Post("login")
-  signIn(@Body() signInDto: Record<string, any>) {
+  @ApiBody({ type: SignInDTO })
+  signIn(@Body() signInDto: SignInDTO) {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
-  // 测试接口
-  // @UseGuards(AuthGuard)
-  @Get("profile")
-  getProfile(@Request() req) {
-    return req.user;
-  }
 }
